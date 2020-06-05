@@ -1,5 +1,13 @@
 # Create a class to hold a city location. Call the class "City". It should have
-# fields for name, lat and lon (representing latitude and longitude).
+# fields for name, lat and lon (representing latitude and longitude)
+class City: 
+  def __init__(self, name ,lat ,lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
+
+  def __str__(self):
+    return f"{self.name}: ({self.lat}, {self.lon})"
 
 
 # We have a collection of US cities with population over 750,000 stored in the
@@ -14,12 +22,19 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+import csv
 cities = []
-
-def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+def cityreader(cities=[]):
+  with open('src\cityreader\cities.csv', newline='') as file:
+    spamreader = csv.reader(file, delimiter=',')
+    next(spamreader)
+
+    for rows in spamreader:
+      cities.append(City(rows[0], rows[3], rows[4]))
+
     
     return cities
 
@@ -59,13 +74,36 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
-
+# within will hold the cities that fall within the specified region
+# TODO Ensure that the lat and lon valuse are all floats
+# Go through each city and check to see if it falls within 
+# the specified coordinates.
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
   within = []
+  latitude = [lat1, lat2]
+  longitude = [lon1, lon2]
+  latitude.sort()
+  longitude.sort()
 
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
-
+  for city in cities:
+    if latitude[0] <= float(city.lat) <= latitude[1] and longitude[0] <= float(city.lon) <= longitude[1]:
+      within.append(city)
+      print(city)
+      
   return within
+print('\n --->  STRETCH CODE  <----\n')
+cityreader_stretch(45, -100, 32, -120, cities=cities)
+
+
+# Enter lat1,lon1: 45,-100
+# Enter lat2,lon2: 32,-120
+# Albuquerque: (35.1055,-106.6476)
+# Riverside: (33.9382,-117.3949)
+# San Diego: (32.8312,-117.1225)
+# Los Angeles: (34.114,-118.4068)
+# Las Vegas: (36.2288,-115.2603)
+# Denver: (39.7621,-104.8759)
+# Phoenix: (33.5722,-112.0891)
+# Tucson: (32.1558,-110.8777)
+# Salt Lake City: (40.7774,-111.9301)
+
